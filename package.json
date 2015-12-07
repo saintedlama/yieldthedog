@@ -1,7 +1,7 @@
 {
   "name": "yieldthedog",
   "version": "1.0.0",
-  "description": "",
+  "description": "An experiment to lift the yield the dog blog to metalsmith",
   "main": "build.js",
   "dependencies": {
     "metalsmith": "^2.1.0",
@@ -29,8 +29,9 @@
     "shelljs": "^0.5.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js",
+    "preview": "http-server build"
   },
-  "author": "",
+  "author": "Christoph Walcher <christoph.walcher@gmail.com>",
   "license": "ISC"
 }

@@ -40,12 +40,10 @@ metalsmith(__dirname)
   .use(render('ejs'))
   .use(layouts('ejs'))
   .destination('./build')
-  .build(function(err, files) {
+  .build(function(err) {
     if (err) { throw err; }
 
-
-    //console.log(Object.keys(files).map(f => files[f]));
-    //shell.cp('-rf', 'build/*', '../serve');
+    // TODO: gh-pages stuff here
   });
 
 function isPublished(){
