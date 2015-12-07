@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>yield the dog</title>
+  <meta name="author" content="yield the dog">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--TODO: Pull author, title, canonical from a config -->
+  <link rel="canonical" href="http://yieldthedog.github.com">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="/blog.css">
+</head>
+
+<body>
+  <div id="layout" class="pure-g">
+    <div class="content pure-u">
+      <div>
+        <div class="posts">
+          <section class="post">
+            <header class="post-header">
+              
+              <!-- TODO: comments -->
+              <h2 class="post-title">Invoke JS Beautify in Vim</h2>
+
+              <p class="post-meta">
+                
+                Under <a class="post-category post-category-vim,javascript" href="#">vim,javascript</a>
+                
+              </p>
+            </header>
+
+            <div class="post-description">
+              <p>Do you really need a plugin for vim to beautify your code? 
+<!-- More --></p>
+<p>1) Install js-beautify</p>
+<pre><code>npm install -g js-beautify
+</code></pre><p>2) Map js-beautify to ,ff (if your leader is ,):</p>
+<pre><code>nnoremap &lt;leader&gt;ff :%!js-beautify -j -q -B -f -&lt;CR&gt;
+</code></pre><p>3) Customize the options the way you want</p>
+<pre><code>js-beautify -h #will give you all options
+</code></pre><p>The options above stand for</p>
+<ul>
+<li>-j  make jshint happy</li>
+<li>-q  silent, otherwise you get js beautify output in your file</li>
+<li>-B  Break chained method into seperate lines</li>
+<li>-f - use STDIN as file</li>
+</ul>
+<p>There is no need for a vim plugin to do this for you and this way you can easily customize it the way you want.</p>
+<p>Happy vimming!</p>
+
+            </div>
+          </section>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <div class="pure-menu pure-menu-horizontal">
+          <ul>
+            <li class="pure-menu-item"><a href="http://purecss.io/" class="pure-menu-link">About</a></li>
+            <li class="pure-menu-item"><a href="http://twitter.com/yuilibrary/" class="pure-menu-link">Twitter</a></li>
+            <li class="pure-menu-item"><a href="http://github.com/yahoo/pure/" class="pure-menu-link">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

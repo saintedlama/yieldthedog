@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>yield the dog</title>
+  <meta name="author" content="yield the dog">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--TODO: Pull author, title, canonical from a config -->
+  <link rel="canonical" href="http://yieldthedog.github.com">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="/blog.css">
+</head>
+
+<body>
+  <div id="layout" class="pure-g">
+    <div class="content pure-u">
+      <div>
+        <div class="posts">
+          <section class="post">
+            <header class="post-header">
+              
+              <img class="post-avatar" alt="Thomas's avatar" height="48" width="48" src="/img/avatar_Thomas.png"-->
+              
+              <!-- TODO: comments -->
+              <h2 class="post-title">MSSql to MySql migration with a little help of Rails and PHP</h2>
+
+              <p class="post-meta">
+                
+                By <a href="#" class="post-author">Thomas</a> under <a class="post-category post-category-mssql,mysql,migration,rails,php" href="#">mssql,mysql,migration,rails,php</a>
+                
+              </p>
+            </header>
+
+            <div class="post-description">
+              <p>##The problem</p>
+<p>You want to migrate a MSSql database to MySql. You have rather large schema and don&#39;t want to do it by hand.</p>
+<!-- more -->
+<p>##Possible solutions</p>
+<p>###Mysql Migration Toolkit</p>
+<p>The <a href="http://dev.mysql.com/doc/migration-toolkit/en/:">MySql Migration Toolkit</a> look promising at first. You can use a comfortable GUI to select what you want to migrate. The first problems arose, when the toolkit tried to migrate the schema. Obviously my MSSql schema was not compatible with MySql, I found no way to manually correct this errors, so this was a dead end. I have the feeling that the work on this tool has stopped, so maybe that&#39;s a reason it failed.</p>
+<p>###MySql ODBC Connector</p>
+<p>When you install the <a href="http://dev.mysql.com/downloads/connector/odbc/">ODBC Connector</a> for MySql, theory claims, that you can select it from the SQL Management Studio to export data to it. However, the reality was a bit different. When I tried it, there was no MySql entry. Bad luck.</p>
+<p>##What worked</p>
+<p>After 6 hours of trial and error and no success with any tools, I gave up.</p>
+<p>As the project was based on Rails, I used <code>rake db:schema:dump</code> to get the schema definition from the MSSql server in Ruby code. Afterwards I changed the connection to the MySql server and tried <code>rake db:schema:load</code>. As expected I had no luck, but with the big difference, that now I had some code that I could mangle and massage.</p>
+<p>There were only problems that were solved in mere seconds:</p>
+<ul>
+<li>an index on varchar(9999)</li>
+<li>unsupported type, where another one could be used</li>
+<li>...</li>
+</ul>
+<p>So now I had my schema ready in MySql waiting for some data. As I&#39;m a long time PHP programmer, too, I knew that PHP lets you easily connect to MySql and MSSql with nearly the same patterns. So I gave it a try and came up with this console script:</p>
+<p>{% codeblock lang:ruby %}
+&lt;?php</p>
+<p>#Connection variables :
+$mysql_host = &#39;&#39;;
+$mysql_user = &#39;&#39;;
+$mysql_password = &#39;&#39;;
+$mysql_database = &#39;&#39;;
+$mysql_link = mysql_connect(
+  $mysql_host,
+  $mysql_user,
+  $mysql_password);</p>
+<p>$mssql_host = &#39;&#39;;
+$mssql_user = &#39;&#39;;
+$mssql_password = &#39;&#39;;
+$mssql_database = &#39;&#39;;
+$mssql_link = mssql_connect(
+  $mssql_host,
+  $mssql_user, 
+  $mssql_password);</p>
+<p>$tables = array(/<em> LIST THE TABLES YOU WANT TO MIGRATE HERE </em>/);</p>
+<p>#Select the databases:
+mysql_select_db($mysql_database);
+mssql_select_db($mssql_database);</p>
+<p>#Migrate the data:
+foreach($tables as $table){</p>
+<pre><code>$m_res = mssql_query(&#39;select * from &#39;. $table);
+
+$j = 0;
+
+while($rec = mssql_fetch_array($m_res, MSSQL_NUM)){
+    echo $table, &#39; &gt;&gt; &#39;, $j++, &quot;\n&quot;;
+    $cols = count($rec);
+    for($i = 0; $i &lt; $cols; $i++){
+        if(is_string($rec[$i])){
+            $rec[$i] = &quot;&#39;&quot; . mysql_real_escape_string($rec[$i]) . &quot;&#39;&quot;;
+        }
+        if(is_null($rec[$i])) $rec[$i] = &#39;NULL&#39;;
+    }
+
+    $query = &#39;insert into &#39;.$table.&quot; values (&quot; . implode(&quot;,&quot;, $rec) . &quot;);&quot;;
+    $res = mysql_query($query);
+    if(!$res) echo $query, &#39; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; &#39;, mysql_error(), &quot;\n&quot;;
+}
+</code></pre><p>}</p>
+<p>{% endcodeblock %}</p>
+<p>Probably this is not the most performant way to migrate, simply due to the fact that there are no batch inserts, but it lets me easily monitor  errors and progress. The whole process - all errors included - took me less time and energy, that I wasted on research. Being a programmer I normally favor coding over tools. Sometimes the effort isn&#39;t worth it, this time it was.</p>
+<p>My approach should work on any project and is not bound to MySql and MSSql. The solution is only limited by the database connectors that are available for PHP and Ruby (Rails).</p>
+
+            </div>
+          </section>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <div class="pure-menu pure-menu-horizontal">
+          <ul>
+            <li class="pure-menu-item"><a href="http://purecss.io/" class="pure-menu-link">About</a></li>
+            <li class="pure-menu-item"><a href="http://twitter.com/yuilibrary/" class="pure-menu-link">Twitter</a></li>
+            <li class="pure-menu-item"><a href="http://github.com/yahoo/pure/" class="pure-menu-link">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
