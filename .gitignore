@@ -5,10 +5,3 @@ node_modules
 *~
 *.swp
 build
-
-archive/
-blog.css
-img/
-index.html
-posts/
-rss.xml
