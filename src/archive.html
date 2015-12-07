@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="/blog.css">
+  <link rel="stylesheet" href="blog.css">
 </head>
 
 <body>
@@ -30,7 +30,7 @@
           <% for(var j=0;j<year.data.length;j++) { var post = year.data[j]; %>
           <section class="post">
             <header class="post-header">
-              <h2 class="post-title"><a href="/<%=post.path%>"><%=post.title%></a></h2>
+              <h2 class="post-title"><a href="../<%=post.path%>"><%=post.title%></a></h2>
             </header>
           </section>
           <% } %>
