@@ -57,6 +57,7 @@ metalsmith(__dirname)
       exec('git checkout gh-pages');
       cp('-rf', 'build/*', '.');
 
+      exec(`git add *`);
       exec(`git commit -a -m "${process.argv[3]}"`);
       exec(`git push`);
     }
