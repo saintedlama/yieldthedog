@@ -60,6 +60,9 @@ metalsmith(__dirname)
       exec(`git add *`);
       exec(`git commit -a -m "${process.argv[3]}"`);
       exec(`git push`);
+      exec(`git checkout master`);
+
+      console.log('You released it! W00t!');
     }
   });
 
