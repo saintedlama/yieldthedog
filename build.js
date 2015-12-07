@@ -11,7 +11,7 @@ const feed = require('metalsmith-feed');
 const archive = require('metalsmith-archive');
 const moment = require('moment');
 
-const shell = require('shelljs');
+const shell = require('shelljs/global');
 
 metalsmith(__dirname)
   .metadata({
@@ -43,6 +43,13 @@ metalsmith(__dirname)
   .build(function(err) {
     if (err) { throw err; }
 
+    if (exec('git status --porcelain').output != '') {
+      console.error('Git working directory not clean. Please commit and build again!');
+      process.exit(2);
+    }
+
+    cp('-rf', 'build/*', '.');
+    exec('git checkout gh-pages');
     // TODO: gh-pages stuff here
   });
 
