@@ -11,7 +11,7 @@ const feed = require('metalsmith-feed');
 const archive = require('metalsmith-archive');
 const moment = require('moment');
 
-const shell = require('shelljs/global');
+require('shelljs/global');
 
 metalsmith(__dirname)
   .metadata({
@@ -43,14 +43,23 @@ metalsmith(__dirname)
   .build(function(err) {
     if (err) { throw err; }
 
-    if (exec('git status --porcelain').output != '') {
-      console.error('Git working directory not clean. Please commit and build again!');
-      process.exit(2);
-    }
+    if (process.argv[2] == 'release') {
+      if (process.argv.length < 4) {
+        console.error('Please specify a release message used as git commit message');
+        process.exit(2);
+      }
 
-    cp('-rf', 'build/*', '.');
-    exec('git checkout gh-pages');
-    // TODO: gh-pages stuff here
+      if (exec('git status --porcelain').output != '') {
+        console.error('Git working directory not clean. Please commit and build again!');
+        process.exit(2);
+      }
+
+      exec('git checkout gh-pages');
+      cp('-rf', 'build/*', '.');
+
+      exec(`git commit -a -m ${process.argv[3]}`);
+      exec(`git push`);
+    }
   });
 
 function isPublished(){
