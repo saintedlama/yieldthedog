@@ -10,6 +10,7 @@ const branch = require('metalsmith-branch');
 const feed = require('metalsmith-feed');
 const archive = require('metalsmith-archive');
 const moment = require('moment');
+const execFile = require('child_process').execFileSync;
 
 require('shelljs/global');
 
@@ -58,7 +59,7 @@ metalsmith(__dirname)
       cp('-rf', 'build/*', '.');
 
       exec(`git add *`);
-      exec(`git commit -a -m "${process.argv[3]}"`);
+      execFile('git', ['commit', '-a', '-m', process.argv[3]], { stdio: 'inherit' });
       exec(`git push`);
       exec(`git checkout master`);
 
